@@ -1,9 +1,11 @@
-<h1>Welcome Home</h1>
+{% extends '_layouts/master.twig' %}
 
-{{ csrf_field() | raw }}
-{{ csrf.field | raw }}
-{{ csrf_token() | json_encode }}
+    {% block content %}
 
-{% for user in users %}
-    {{ user.name }}
-{% endfor %}
+        <div class="container page-header">
+            <div class="col-sm-12 text-center">
+                <h1>Welcome Home</h1>
+            </div>
+        </div>
+
+    {% endblock %}

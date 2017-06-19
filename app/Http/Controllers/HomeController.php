@@ -26,12 +26,6 @@ class HomeController extends BaseController
      */
     public function index(ServerRequestInterface $request, ResponseInterface $response, $args)
     {
-        $validation = $this->validator->validate($request, [
-            'name' => \Respect\Validation\Validator::notEmpty()->MatchesPassword('123321'),
-        ]);
-        die(dump($validation->failed()));
-        $users = User::All();
-        
         return $this->view->render($response, 'home.twig', compact('users'));
     }
 }

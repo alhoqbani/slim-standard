@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include '_layouts/_partials/_head.twig' %}
+<body>
+<div class="rbody">
+
+    {% block content %}
+    {% endblock %}
+
+</div> <!-- /.rbody -->
+{% include '_layouts/_partials/_footer.twig' %}
+<script src="{{ base_url() }}/js/jquery.min.js"></script>
+<script src="{{ base_url() }}/js/bootstrap.min.js"></script>
+<script src="{{ base_url() }}/js/app.js"></script>
+
+</body>
+</html>
