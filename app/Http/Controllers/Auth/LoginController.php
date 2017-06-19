@@ -10,6 +10,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Slim\Http\Response;
 
 /**
+ * @property  \App\Http\Validation\ validator
  * @property  \Slim\Views\Twig view
  * @property  \Slim\Router     router
  * @property  \App\Http\Validation\ validator
@@ -34,19 +35,45 @@ class LoginController extends BaseController
     /**
      * Register new users
      *
-     * @param \Psr\Http\Message\ServerRequestInterface $request
-     * @param \Psr\Http\Message\ResponseInterface      $response
-     * @param                                          $args
+     * @param \Psr\Http\Message\ServerRequestInterface                $request
+     * @param \Psr\Http\Message\ResponseInterface|\Slim\Http\Response $response
+     * @param                                                         $args
+     *
+     * @return \Psr\Http\Message\ResponseInterface|\Slim\Http\Response
      */
     public function login(ServerRequestInterface $request, Response $response, $args)
     {
-        if ($this->auth->attempt($request->getParam('email'), $request->getParam('password'))) {
+        $validation = $this->validator->validate($request, [
+            'email'    => \Respect\Validation\Validator::notEmpty(),
+            'password' => \Respect\Validation\Validator::notEmpty(),
+        ]);
+        
+        if ($validation->failed()) {
             
-            $this->flash->addMessage('success', 'You Are Logged In !!');
-            
-            return $response->withRedirect($this->router->pathFor('home'));
+            return $response->withRedirect($this->router->pathFor('auth.login'));
         }
-        dd('NO LOGIN');
+        
+        $auth = $this->auth->attempt(
+            $request->getParam('email'),
+            $request->getParam('password')
+        );
+        
+        if ( ! $auth) {
+            $this->flash->addMessage('error', 'Could not sign you in with those details.');
+            
+            return $response->withRedirect($this->router->pathFor('auth.login'));
+        }
+        
+        return $response->withRedirect($this->router->pathFor('home'));
+        
     }
+    
+    public function logout(ServerRequestInterface $request, ResponseInterface $response, $args)
+    {
+        $this->auth->logout();
+        
+        return $response->withRedirect($this->router->pathFor('home'));
+    }
+    
     
 }

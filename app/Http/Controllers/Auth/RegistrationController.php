@@ -7,11 +7,12 @@ use App\Models\User;
 use App\Http\Validation\Validator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Respect\Validation\Validator as v;
 
 /**
- * @property  \Slim\Views\Twig view
- * @property  \Slim\Router     router
- * @property  \App\Http\Validation\ validator
+ * @property-read  \Slim\Views\Twig view
+ * @property-read  \Slim\Router     router
+ * @property-read  \App\Http\Validation\ validator
  */
 class RegistrationController extends BaseController
 {
@@ -39,11 +40,26 @@ class RegistrationController extends BaseController
      */
     public function register(ServerRequestInterface $request, ResponseInterface $response, $args)
     {
+        $validation = $this->validator->validate($request, [
+            'email'    => v::noWhitespace()->notEmpty()->email()->emailAvailable(),
+            'name'     => v::notEmpty()->alpha(),
+            'password' => v::noWhitespace()->notEmpty(),
+        ]);
+        
+        if ($validation->failed()) {
+            return $response->withRedirect($this->router->pathFor('auth.register'));
+        }
+        
         User::create([
             'name'     => $request->getParam('name'),
             'email'    => $request->getParam('email'),
-            'password' => password_hash($request->getParam('name'), PASSWORD_DEFAULT),
+            'password' => password_hash($request->getParam('password'), PASSWORD_DEFAULT),
         ]);
+        
+        $this->flash->addMessage('info', 'You have been signed up!');
+        
+        return $response->withRedirect($this->router->pathFor('home'));
+        
     }
     
 }

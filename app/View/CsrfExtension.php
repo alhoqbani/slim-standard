@@ -27,6 +27,7 @@ class CsrfExtension extends \Twig_Extension
         return [
             new \Twig_SimpleFunction('csrf_field', [$this, 'csrfField']),
             new \Twig_SimpleFunction('csrf_token', [$this, 'csrfToken']),
+            new \Twig_SimpleFunction('session_errors', [$this, 'sessionErrors']),
         ];
     }
     
@@ -45,4 +46,13 @@ class CsrfExtension extends \Twig_Extension
             'value' => ['key' => $this->csrf->getTokenValueKey(), 'value' => $this->csrf->getTokenValue()],
         ];
     }
+    
+    public function sessionErrors()
+    {
+        $errors = $_SESSION['errors'] ?? null;
+        unset($_SESSION['errors']);
+        return $errors;
+    }
+    
+    
 }
