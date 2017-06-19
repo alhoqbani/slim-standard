@@ -7,6 +7,7 @@ use Interop\Container\ContainerInterface;
 /**
  * @property  \Slim\Views\Twig        view
  * @property  \Slim\Router            router
+ * @property  \Slim\Flash\Messages    flash
  * @property  \App\Http\Validation\ validator
  * @property  \PDO                    db
  * @property  \App\Services\Auth\Auth auth

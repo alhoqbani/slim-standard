@@ -6,6 +6,10 @@ $container['csrf'] = function () {
     return new Slim\Csrf\Guard();
 };
 
+$container['flash'] = function () {
+    return new Slim\Flash\Messages();
+};
+
 $container['auth'] = function () {
     return new App\Services\Auth\Auth();
 };

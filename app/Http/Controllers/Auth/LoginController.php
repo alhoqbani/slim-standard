@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Http\Validation\Validator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Slim\Http\Response;
 
 /**
  * @property  \Slim\Views\Twig view
@@ -37,10 +38,13 @@ class LoginController extends BaseController
      * @param \Psr\Http\Message\ResponseInterface      $response
      * @param                                          $args
      */
-    public function login(ServerRequestInterface $request, ResponseInterface $response, $args)
+    public function login(ServerRequestInterface $request, Response $response, $args)
     {
         if ($this->auth->attempt($request->getParam('email'), $request->getParam('password'))) {
-            dd('LOGIN IN');
+            
+            $this->flash->addMessage('success', 'You Are Logged In !!');
+            
+            return $response->withRedirect($this->router->pathFor('home'));
         }
         dd('NO LOGIN');
     }

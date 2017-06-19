@@ -11,5 +11,9 @@ $container['view'] = function ($c) {
     $view->addExtension(new Slim\Views\TwigExtension($c['router'], $c['request']->getUri()));
     $view->addExtension(new \App\View\CsrfExtension($c['csrf']));
     
+    
+    $view->getEnvironment()->addGlobal('flash', $c->flash);
+    
+    
     return $view;
 };
