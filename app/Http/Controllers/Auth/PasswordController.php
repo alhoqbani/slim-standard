@@ -37,7 +37,6 @@ class PasswordController extends BaseController
      */
     public function reset(ServerRequestInterface $request, ResponseInterface $response, $args)
     {
-        dd(__METHOD__);
     }
     
     /**
@@ -45,10 +44,12 @@ class PasswordController extends BaseController
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request
      * @param \Psr\Http\Message\ResponseInterface      $response
+     *
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function edit(ServerRequestInterface $request, ResponseInterface $response)
     {
-        dd(__METHOD__);
+        return $this->view->render($response, 'auth/password/edit.twig');
     }
     
     /**
@@ -60,7 +61,20 @@ class PasswordController extends BaseController
      */
     public function update(ServerRequestInterface $request, ResponseInterface $response, $args)
     {
-        dd(__METHOD__);
+        $validation = $this->validator->validate($request, [
+            'current_password' => v::noWhitespace()->notEmpty()->matchesPassword($this->auth->user()->password),
+            'new_password' => v::noWhitespace()->notEmpty(),
+        ]);
+    
+        if ($validation->failed()) {
+            return $response->withRedirect($this->router->pathFor('password.change'));
+        }
+    
+        $this->auth->user()->Update(['password' => $request->getParam('new_password')]);
+    
+        $this->flash->addMessage('info', 'Your password was changed.');
+        return $response->withRedirect($this->router->pathFor('home'));
+    
     }
     
     

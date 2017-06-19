@@ -21,6 +21,7 @@ class ValidationMiddleware extends BaseMiddleware
     public function __invoke(Request $request, Response $response, callable $next)
     {
         if (isset($_SESSION['errors'])) {
+
             $this->view->getEnvironment()->addGlobal('errors', $_SESSION['errors']);
             unset($_SESSION['errors']);
         }
