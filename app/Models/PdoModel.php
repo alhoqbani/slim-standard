@@ -4,7 +4,7 @@ namespace App\Models;
 
 use PDO;
 
-class BaseModel
+class PdoModel
 {
     
     protected $table;
