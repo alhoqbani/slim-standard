@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Http\Validation\Validator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * @property  \Slim\Views\Twig $view
+ * @property  \Slim\Views\Twig view
  * @property  \Slim\Router     router
+ * @property  \App\Http\Validation\ validator
  */
 class HomeController extends BaseController
 {
@@ -24,6 +26,10 @@ class HomeController extends BaseController
      */
     public function index(ServerRequestInterface $request, ResponseInterface $response, $args)
     {
+        $validation = $this->validator->validate($request, [
+            'name' => \Respect\Validation\Validator::notEmpty()->MatchesPassword('123321'),
+        ]);
+        die(dump($validation->failed()));
         $users = User::All();
         
         return $this->view->render($response, 'home.twig', compact('users'));

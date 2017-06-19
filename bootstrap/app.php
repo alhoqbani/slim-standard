@@ -10,4 +10,6 @@ $app = new \Slim\App([
 
 require_once __DIR__ . '/container/container.php';
 require_once __DIR__ . '/middleware.php';
+require_once __DIR__ . '/services.php';
+
 require_once ROOT . 'routes/routes.php';

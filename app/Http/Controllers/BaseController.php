@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use Interop\Container\ContainerInterface;
 
 /**
- * @property  \Slim\Views\Twig $view
+ * @property  \Slim\Views\Twig view
  * @property  \Slim\Router     router
+ * @property  \App\Http\Validation\ validator
  * @property  \PDO             db
  */
 class BaseController
