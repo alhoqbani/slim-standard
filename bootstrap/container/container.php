@@ -6,6 +6,10 @@ $container['csrf'] = function () {
     return new Slim\Csrf\Guard();
 };
 
+$container['auth'] = function () {
+    return new App\Services\Auth\Auth();
+};
+
 $container['validator'] = function () {
     return new App\Http\Validation\Validator();
 };

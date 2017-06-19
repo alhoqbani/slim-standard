@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use Interop\Container\ContainerInterface;
 
 /**
- * @property  \Slim\Views\Twig view
- * @property  \Slim\Router     router
+ * @property  \Slim\Views\Twig        view
+ * @property  \Slim\Router            router
  * @property  \App\Http\Validation\ validator
- * @property  \PDO             db
+ * @property  \PDO                    db
+ * @property  \App\Services\Auth\Auth auth
  */
 class BaseController
 {
