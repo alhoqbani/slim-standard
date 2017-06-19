@@ -24,7 +24,7 @@ class HomeController extends BaseController
      */
     public function index(ServerRequestInterface $request, ResponseInterface $response, $args)
     {
-        $users = USer::All();
+        $users = User::All();
         
         return $this->view->render($response, 'home.twig', compact('users'));
     }

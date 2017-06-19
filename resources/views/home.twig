@@ -1,4 +1,9 @@
 <h1>Welcome Home</h1>
+
+{{ csrf_field() | raw }}
+{{ csrf.field | raw }}
+{{ csrf_token() | json_encode }}
+
 {% for user in users %}
-{{ user.name }}
+    {{ user.name }}
 {% endfor %}
