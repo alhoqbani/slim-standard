@@ -5,14 +5,16 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\BaseController;
 use App\Models\User;
 use App\Http\Validation\Validator;
+use App\Services\Mail\Welcome;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Respect\Validation\Validator as v;
 
 /**
- * @property-read  \Slim\Views\Twig view
- * @property-read  \Slim\Router     router
+ * @property-read  \Slim\Views\Twig            view
+ * @property-read  \Slim\Router                router
  * @property-read  \App\Http\Validation\ validator
+ * @property  \App\Services\Mail\Mailer\Mailer mail
  */
 class PasswordController extends BaseController
 {
@@ -36,9 +38,19 @@ class PasswordController extends BaseController
         if ($validation->failed()) {
             return $response->withRedirect($this->router->pathFor('password.request'));
         }
-        $this->flash->addMessage('info', 'If we have your email in our records, we will send an email');
-        log_this('Password Request', $request->getQueryParams());
+        
+        if ($user = User::findByEmail($request->getParam('email'))) {
 
+            $message = $this->router->pathFor('password.reset', ['token' => '2332']);
+//            dd($message);
+            
+            $message = $this->auth->resetPassword($user);
+            $this->mail->to($user->email, $user->name)->send($message);
+        }
+        $this->flash->addMessage('info', 'If we have your email in our records, we will send an email');
+        
+        log_this('Password Request', $request->getQueryParams());
+        
         return $response->withRedirect($this->router->pathFor('auth.login'));
         
     }

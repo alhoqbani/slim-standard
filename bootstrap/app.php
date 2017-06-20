@@ -8,8 +8,9 @@ $app = new \Slim\App([
     'settings' => $settings,
 ]);
 
-require_once __DIR__ . '/container/container.php';
+\Respect\Validation\Validator::with('\\App\\Http\\Validation\\Rules');
+
+require_once __DIR__ . '/container.php';
 require_once __DIR__ . '/middleware.php';
-require_once __DIR__ . '/services.php';
 
 require_once ROOT . 'routes/routes.php';

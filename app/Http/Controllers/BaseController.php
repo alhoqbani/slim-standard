@@ -23,6 +23,8 @@ class BaseController
     public function __construct(ContainerInterface $container)
     {
         $this->c = $container;
+//        dd($this->c);
+        
     }
     
     public function __get($name)

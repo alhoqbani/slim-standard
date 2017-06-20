@@ -1,6 +1,6 @@
 <?php
 
-namespace App\View;
+namespace App\Services\View;
 
 use Slim\Csrf\Guard;
 
@@ -51,6 +51,7 @@ class CsrfExtension extends \Twig_Extension
     {
         $errors = $_SESSION['errors'] ?? null;
         unset($_SESSION['errors']);
+        
         return $errors;
     }
     

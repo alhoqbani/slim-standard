@@ -11,5 +11,8 @@ class User extends Model
     
     protected $hidden = ['password', 'remember_token'];
     
-    public $timestamps = false;
+    public static function findByEmail($email)
+    {
+        return static::where('email', $email)->first();
+    }
 }

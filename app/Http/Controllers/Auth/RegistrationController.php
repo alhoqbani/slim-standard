@@ -10,10 +10,11 @@ use Psr\Http\Message\ServerRequestInterface;
 use Respect\Validation\Validator as v;
 
 /**
- * @property-read  \Slim\Views\Twig                 view
- * @property-read  \Slim\Router                     router
+ * @property-read  \Slim\Views\Twig                    view
+ * @property-read  \Slim\Router                        router
  * @property-read  \App\Http\Validation\ validator
- * @property-read  \App\Services\Mail\Mailer\Mailer mail
+ * @property-read  \App\Services\Mail\Mailer\Mailer    mail
+ * @property-read       \App\Http\Validation\Validator validator
  */
 class RegistrationController extends BaseController
 {
