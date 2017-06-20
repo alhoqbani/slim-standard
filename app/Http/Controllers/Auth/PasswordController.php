@@ -22,10 +22,25 @@ class PasswordController extends BaseController
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request
      * @param \Psr\Http\Message\ResponseInterface      $response
+     *
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function request(ServerRequestInterface $request, ResponseInterface $response)
     {
-        dd(__METHOD__);
+        if ($request->getMethod() === "GET") {
+            return $this->view->render($response, 'auth/password/request.twig');
+        }
+        $validation = $this->validator->validate($request, [
+            'email' => v::noWhitespace()->notEmpty()->email(),
+        ]);
+        if ($validation->failed()) {
+            return $response->withRedirect($this->router->pathFor('password.request'));
+        }
+        $this->flash->addMessage('info', 'If we have your email in our records, we will send an email');
+        log_this('Password Request', $request->getQueryParams());
+
+        return $response->withRedirect($this->router->pathFor('auth.login'));
+        
     }
     
     /**
@@ -37,6 +52,7 @@ class PasswordController extends BaseController
      */
     public function reset(ServerRequestInterface $request, ResponseInterface $response, $args)
     {
+    
     }
     
     /**
@@ -63,20 +79,20 @@ class PasswordController extends BaseController
     {
         $validation = $this->validator->validate($request, [
             'current_password' => v::noWhitespace()->notEmpty()->matchesPassword($this->auth->user()->password),
-            'new_password' => v::noWhitespace()->notEmpty(),
+            'new_password'     => v::noWhitespace()->notEmpty(),
         ]);
-    
+        
         if ($validation->failed()) {
             return $response->withRedirect($this->router->pathFor('password.change'));
         }
-    
+        
         $this->auth->user()->Update(['password' => $request->getParam('new_password')]);
-    
+        
         $this->flash->addMessage('info', 'Your password was changed.');
+        
         return $response->withRedirect($this->router->pathFor('home'));
-    
+        
     }
-    
     
     
 }

@@ -1,7 +1,7 @@
 <?php
 
 
-function logThis($type, $data = null)
+function log_this($type, $data = null)
 {
     $file = ROOT . 'Storage/logs/applog.txt';
     if ( ! file_exists($file)) {
@@ -11,8 +11,11 @@ function logThis($type, $data = null)
     $resource = fopen(ROOT . 'Storage/logs/applog.txt', 'a');
     
     $content = "{$type} \t " . \Carbon\Carbon::now()->toDateTimeString() . PHP_EOL;
+    if (is_array($data)) {
+        $data = implode(' - ', $data);
+    }
     
-    $content .= http_build_query($data);
+    $content .= $data;
     
     fwrite($resource, $content . PHP_EOL . PHP_EOL);
     
@@ -41,8 +44,8 @@ function logThis($type, $data = null)
 //        return $content;
 //} //
 
-function extract_data($data) {
-    if (is_array($data)) {
-        $content;
-    }
-}
+//function extract_data($data) {
+//    if (is_array($data)) {
+//        $content;
+//    }
+//}
