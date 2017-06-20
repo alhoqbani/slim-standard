@@ -1,6 +1,7 @@
 <?php
+
 return [
-    'displayErrorDetails' => true,
+    'displayErrorDetails' => getenv('APP_DEBUG') === 'true' ? true : false,
     
     'app' => [
         'name' => getenv('APP_NAME'),

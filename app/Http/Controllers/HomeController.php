@@ -28,6 +28,7 @@ class HomeController extends BaseController
      */
     public function index(ServerRequestInterface $request, ResponseInterface $response, $args)
     {
+
         $user = User::first();
         
 //        $this->mail->send('emails/welcome.twig', ['user' => $user], function ($message) use ($user) {

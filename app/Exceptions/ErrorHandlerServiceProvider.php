@@ -22,5 +22,17 @@ class ErrorHandlerServiceProvider implements ServiceProviderInterface
             return new NotFoundHandler($c->view);
         };
         
+        $pimple['notAllowedHandler'] = function ($c) {
+            return new notAllowedHandler($c->view);
+        };
+        
+        $pimple['phpErrorHandler'] = function ($c) {
+            return new PhpErrorHandler($c->view, $c['settings']['displayErrorDetails']);
+        };
+        
+        $pimple['errorHandler'] = function ($c) {
+            return new ErrorHandler($c->view, $c['settings']['displayErrorDetails']);
+        };
+        
     }
 }
