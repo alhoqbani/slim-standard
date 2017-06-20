@@ -19,3 +19,4 @@ $container->register(new \App\Services\Mail\MailServiceProvider());
 $container->register(new \App\Services\Auth\AuthServiceProvider());
 $container->register(new \App\Services\View\TwigServiceProvider());
 $container->register(new \App\Services\Database\EloquentServiceProvider());
+$container->register(new \App\Exceptions\ErrorHandlerServiceProvider());
