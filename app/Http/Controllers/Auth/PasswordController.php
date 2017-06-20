@@ -123,7 +123,10 @@ class PasswordController extends BaseController
             return $response->withRedirect($this->router->pathFor('password.change'));
         }
         
-        $this->auth->user()->Update(['password' => $request->getParam('new_password')]);
+        $this->auth->user()->Update([
+            'password' => password_hash($request->getParam('new_password'), PASSWORD_DEFAULT),
+        
+        ]);
         
         $this->flash->addMessage('info', 'Your password was changed.');
         
