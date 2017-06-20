@@ -43,6 +43,7 @@ class RegistrationController extends BaseController
         $validation = $this->validator->validate($request, [
             'email'    => v::noWhitespace()->notEmpty()->email()->emailAvailable(),
             'name'     => v::notEmpty()->alpha(),
+            'username' => v::noWhitespace()->notEmpty()->alpha(),
             'password' => v::noWhitespace()->notEmpty(),
         ]);
         
@@ -50,13 +51,15 @@ class RegistrationController extends BaseController
             return $response->withRedirect($this->router->pathFor('auth.register'));
         }
         
-        User::create([
+        $user = User::create([
             'name'     => $request->getParam('name'),
+            'username' => $request->getParam('username'),
             'email'    => $request->getParam('email'),
             'password' => password_hash($request->getParam('password'), PASSWORD_DEFAULT),
         ]);
         
         $this->flash->addMessage('info', 'You have been signed up!');
+        $this->auth->signIn($user);
         
         return $response->withRedirect($this->router->pathFor('home'));
         
