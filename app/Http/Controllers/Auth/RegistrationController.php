@@ -4,15 +4,16 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\BaseController;
 use App\Models\User;
-use App\Http\Validation\Validator;
+use App\Services\Mail\Welcome;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Respect\Validation\Validator as v;
 
 /**
- * @property-read  \Slim\Views\Twig view
- * @property-read  \Slim\Router     router
+ * @property-read  \Slim\Views\Twig                 view
+ * @property-read  \Slim\Router                     router
  * @property-read  \App\Http\Validation\ validator
+ * @property-read  \App\Services\Mail\Mailer\Mailer mail
  */
 class RegistrationController extends BaseController
 {
@@ -41,9 +42,9 @@ class RegistrationController extends BaseController
     public function register(ServerRequestInterface $request, ResponseInterface $response, $args)
     {
         $validation = $this->validator->validate($request, [
-            'email'    => v::noWhitespace()->notEmpty()->email()->emailAvailable(),
+            'email'    => v::noWhitespace()->notEmpty()->email()->existsInTable($this->db->table('users'), 'email'),
             'name'     => v::notEmpty()->alpha(),
-            'username' => v::noWhitespace()->notEmpty()->alpha(),
+            'username' => v::noWhitespace()->notEmpty()->alpha()->existsInTable($this->db->table('users'), 'username'),
             'password' => v::noWhitespace()->notEmpty(),
         ]);
         
@@ -60,6 +61,7 @@ class RegistrationController extends BaseController
         
         $this->flash->addMessage('info', 'You have been signed up!');
         $this->auth->signIn($user);
+        $this->mail->to($user->email, $user->name)->send(new Welcome($user));
         
         return $response->withRedirect($this->router->pathFor('home'));
         

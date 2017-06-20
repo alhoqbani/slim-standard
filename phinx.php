@@ -22,7 +22,7 @@ return [
         'default_database'        => 'development',
         'development'             => [
             'name'       => $config['dbname'],
-            'connection' => $container->db,
+            'connection' => $container->db->getConnection()->getPdo(),
         ],
         'production'              => [
             'adapter'   => $config['driver'],

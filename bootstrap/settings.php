@@ -22,4 +22,16 @@ return [
         'password' => getenv('DB_PASSWORD'),
         'dbname'   => getenv('DB_DATABASE'),
     ],
+    
+    'mail' => [
+        'host'     => getenv('MAIL_HOST'),
+        'port'     => getenv('MAIL_PORT'),
+        'from'     => [
+            'address' => getenv('MAIL_FROM_ADDRESS'),
+            'name'    => getenv('MAIL_FROM_NAME'),
+        ],
+        'username' => getenv('MAIL_USERNAME'),
+        'password' => getenv('MAIL_PASSWORD'),
+    ],
+
 ];

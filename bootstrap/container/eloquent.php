@@ -25,5 +25,5 @@ $capsule->bootEloquent();
 
 $container['db'] = function ($c) use ($capsule) {
     
-    return $capsule->getConnection()->getPdo();
+    return $capsule;
 };
