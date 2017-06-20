@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\BaseController;
 use App\Models\User;
 use App\Http\Validation\Validator;
+use App\Services\Mail\ResetPassword;
 use App\Services\Mail\Welcome;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -40,16 +41,11 @@ class PasswordController extends BaseController
         }
         
         if ($user = User::findByEmail($request->getParam('email'))) {
-
-            $message = $this->router->pathFor('password.reset', ['token' => '2332']);
-//            dd($message);
-            
-            $message = $this->auth->resetPassword($user);
-            $this->mail->to($user->email, $user->name)->send($message);
+            $this->mail->to($user->email, $user->name)
+                ->send(new ResetPassword($user,
+                    $this->auth->passwordToken($user)));
         }
         $this->flash->addMessage('info', 'If we have your email in our records, we will send an email');
-        
-        log_this('Password Request', $request->getQueryParams());
         
         return $response->withRedirect($this->router->pathFor('auth.login'));
         
@@ -64,7 +60,36 @@ class PasswordController extends BaseController
      */
     public function reset(ServerRequestInterface $request, ResponseInterface $response, $args)
     {
-    
+        $token = $args['token'];
+        if ( ! $email = $this->auth->validateToken($token)) {
+            return $response->withStatus(401);
+        }
+        
+        if ($request->getMethod() === "GET") {
+            return $this->view->render(
+                $response,
+                'auth/password/reset.twig',
+                ['email' => $email, 'token' => $token]
+            );
+        }
+        
+        $validation = $this->validator->validate($request, [
+            'password' => v::noWhitespace()->notEmpty(),
+        ]);
+        
+        if ($validation->failed()) {
+            return $response->withRedirect($this->router->pathFor('password.reset', ['token' => $token]));
+        }
+        
+        if ($user = User::findByEmail($email)) {
+            $this->auth->resetPassword($user, $request->getParam('password'));
+            $this->flash->addMessage('success', 'You Password was changed');
+            
+            return $response->withRedirect($this->router->pathFor('auth.login'));
+            
+        };
+        
+        
     }
     
     /**

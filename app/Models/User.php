@@ -15,4 +15,9 @@ class User extends Model
     {
         return static::where('email', $email)->first();
     }
+    
+    public static function findByToken($token)
+    {
+        return static::where('token', $token)->first();
+    }
 }

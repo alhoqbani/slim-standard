@@ -16,6 +16,7 @@ $app->group('', function () {
     $this->get('/password/reset', PasswordController::class . ':request')->setName('password.request');
     $this->post('/password/reset', PasswordController::class . ':request');
     $this->get('/password/reset/{token}', PasswordController::class . ':reset')->setName('password.reset');
+    $this->post('/password/reset/{token}', PasswordController::class . ':reset');
     
     $this->get('/login', LoginController::class . ':index')->setName('auth.login');
     $this->post('/login', LoginController::class . ':login');

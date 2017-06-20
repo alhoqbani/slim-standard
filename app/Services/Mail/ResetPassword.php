@@ -21,6 +21,7 @@ class ResetPassword extends Mailable
      * Welcome constructor.
      *
      * @param \App\Models\User $user
+     * @param                  $token
      */
     public function __construct(User $user, $token)
     {

@@ -3,7 +3,6 @@
 namespace App\Services\Auth;
 
 use App\Models\User;
-use App\Services\Mail\ResetPassword;
 use Carbon\Carbon;
 use Illuminate\Database\Capsule\Manager;
 
@@ -11,12 +10,18 @@ class Auth
 {
     
     /**
+     * Reset Password token validation in Hours
+     */
+    const TOKEN_VALID_FOR = 1;
+    /**
      * @var \Illuminate\Database\Capsule\Manager
      */
     private $db;
     
     /**
      * Auth constructor.
+     *
+     * @param \Illuminate\Database\Capsule\Manager $db
      */
     public function __construct(Manager $db)
     {
@@ -63,9 +68,9 @@ class Auth
         unset($_SESSION['user']);
     }
     
-    public function resetPassword($user)
+    public function passwordToken($user)
     {
-        $token = 'TOKEN';
+        $token = $this->generateToken();
         
         $this->db->table('password_resets')
             ->insert([
@@ -74,7 +79,49 @@ class Auth
                 'token'      => $token,
             ]);
         
-        return new ResetPassword($user, $token);
+        return $token;
+    }
+    
+    public function validateToken($token)
+    {
+        if ($validToken = $this->verifyToken($token)) {
+            return $validToken->email;
+        } else {
+            return false;
+        }
+    }
+    
+    public function resetPassword(User $user, $password)
+    {
+        $user->update([
+            'password' => password_hash($password, PASSWORD_DEFAULT),
+        ]);
+        $this->db->table('password_resets')->where('email', $user->email)->delete();
+    }
+    
+    
+    protected function generateToken($length = 32)
+    {
+        if ( ! isset($length) || intval($length) <= 8) {
+            $length = 32;
+        }
+        if (function_exists('random_bytes')) {
+            return bin2hex(random_bytes($length));
+        }
+        if (function_exists('openssl_random_pseudo_bytes')) {
+            return bin2hex(openssl_random_pseudo_bytes($length));
+        }
+    }
+    
+    private function verifyToken($token)
+    {
+        $token = $this->db->table('password_resets')->where('token', $token)->first();
         
+        return ($token && $this->tokenIsRecent($token)) ? $token : false;
+    }
+    
+    private function tokenIsRecent($token)
+    {
+        return Carbon::parse($token->created_at)->diffInHours() < self::TOKEN_VALID_FOR;
     }
 }
