@@ -20,9 +20,12 @@ class OldInputMiddleware extends BaseMiddleware
      */
     public function __invoke(Request $request, Response $response, callable $next)
     {
-        $_SESSION['old'] = $_SESSION['old'] ?? null;
-        $this->view->getEnvironment()->addGlobal('old', $_SESSION['old']);
+        if (isset($_SESSION['old'])) {
+            $this->view->getEnvironment()->addGlobal('old', $_SESSION['old']);
+        }
+        
         $_SESSION['old'] = $request->getParams();
+        
         $response = $next($request, $response);
         
         return $response;
