@@ -1,0 +1,76 @@
+<?php
+
+namespace App\Console\Commands;
+
+use App\Console\BaseCommand;
+use Symfony\Component\Console\Input\InputArgument;
+
+class StubCommandName extends BaseCommand
+{
+    /**
+     * @var \Symfony\Component\Console\Output\OutputInterface
+     */
+    protected $output;
+    
+    /**
+     * @var \Symfony\Component\Console\Input\InputInterface
+     */
+    protected $input;
+    
+    
+    /**
+     * @var \Interop\Container\ContainerInterface
+     */
+    protected $c;
+    
+    /**
+     * The command name.
+     *
+     * @var string
+     */
+    protected $command = 'command:name';
+    
+    /**
+     * The command description.
+     *
+     * @var string
+     */
+    protected $description = 'Command description.';
+    
+    /**
+     * The command help.
+     *
+     * @var string
+     */
+    protected $help = '';
+    
+    /**
+     * Execute the command
+     *
+     * @return void
+     */
+    protected function handle()
+    {
+        //
+    }
+    
+    /**
+     * @return array
+     */
+    protected function arguments()
+    {
+        return [
+//            [$name, $mode = InputArgument::REQUIRED, $description = '', $default = null],
+        ];
+    }
+    
+    /**
+     * @return array
+     */
+    protected function options()
+    {
+        return [
+//            [name, $shortcut = null, $mode = null, $description = '', $default = null],
+        ];
+    }
+}

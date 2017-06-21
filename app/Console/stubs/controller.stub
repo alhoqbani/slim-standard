@@ -1,0 +1,29 @@
+<?php
+
+namespace StubNamespace;
+
+use App\Http\Controllers\BaseController;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+
+/**
+ * @property  \Slim\Views\Twig $view
+ * @property  \Slim\Router     router
+ */
+class StubClassName extends BaseController
+{
+
+    /**
+     * Index Page
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param \Psr\Http\Message\ResponseInterface      $response
+     * @param                                          $args
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function index(ServerRequestInterface $request, ResponseInterface $response, $args)
+    {
+        //
+    }
+}
